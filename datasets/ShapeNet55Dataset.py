@@ -5,6 +5,7 @@ import torch.utils.data as data
 from .io import IO
 from .build import DATASETS
 from utils.logger import *
+from IPython import embed
 
 @DATASETS.register_module()
 class ShapeNet(data.Dataset):
@@ -13,6 +14,11 @@ class ShapeNet(data.Dataset):
         self.pc_path = config.PC_PATH
         self.subset = config.subset
         self.npoints = config.N_POINTS
+
+        print("############################")
+        print("From the ShapeNet dataset class initialization.")
+        print("############################")
+        embed()
         
         self.data_list_file = os.path.join(self.data_root, f'{self.subset}.txt')
         test_data_list_file = os.path.join(self.data_root, 'test.txt')
@@ -59,6 +65,11 @@ class ShapeNet(data.Dataset):
     def __getitem__(self, idx):
         sample = self.file_list[idx]
 
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        print("From the ShapeNet dataset get function.")
+        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        embed()
+        
         data = IO.get(os.path.join(self.pc_path, sample['file_path'])).astype(np.float32)
 
         data = self.random_sample(data, self.sample_points_num)
