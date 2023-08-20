@@ -41,10 +41,10 @@ def main():
     config = get_config(args, logger = logger)
     # batch size
 
-    print("##################################")
-    print("Embedding in Main.")
-    print("##################################")
-    embed()
+    # print("##################################")
+    # print("Embedding in Main.")
+    # print("##################################")
+    # embed()
     
     if args.distributed:
         assert config.total_bs % world_size == 0
