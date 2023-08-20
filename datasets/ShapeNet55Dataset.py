@@ -15,10 +15,10 @@ class ShapeNet(data.Dataset):
         self.subset = config.subset
         self.npoints = config.N_POINTS
 
-        print("############################")
-        print("From the ShapeNet dataset class initialization.")
-        print("############################")
-        embed()
+        # print("############################")
+        # print("From the ShapeNet dataset class initialization.")
+        # print("############################")
+        # embed()
         
         self.data_list_file = os.path.join(self.data_root, f'{self.subset}.txt')
         test_data_list_file = os.path.join(self.data_root, 'test.txt')
@@ -65,10 +65,10 @@ class ShapeNet(data.Dataset):
     def __getitem__(self, idx):
         sample = self.file_list[idx]
 
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print("From the ShapeNet dataset get function.")
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        embed()
+        # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        # print("From the ShapeNet dataset get function.")
+        # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        # embed()
         
         data = IO.get(os.path.join(self.pc_path, sample['file_path'])).astype(np.float32)
 
