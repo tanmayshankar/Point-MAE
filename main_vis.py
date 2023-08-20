@@ -7,6 +7,7 @@ import time
 import os
 import torch
 from tensorboardX import SummaryWriter
+from IPython import embed
 
 def main():
     # args
@@ -39,6 +40,12 @@ def main():
     # config
     config = get_config(args, logger = logger)
     # batch size
+
+    print("##################################")
+    print("Embedding in Main.")
+    print("##################################")
+    embed()
+    
     if args.distributed:
         assert config.total_bs % world_size == 0
         config.dataset.train.others.bs = config.total_bs // world_size
