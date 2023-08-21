@@ -75,6 +75,9 @@ def test(base_model, test_dataloader, args, config, logger = None):
             else:
                 raise NotImplementedError(f'Train phase do not support {dataset_name}')
 
+            print("#########################")
+            print("Embedding in runner.py test, before base model forward.")
+            embed()
             # dense_points, vis_points = base_model(points, vis=True)
             dense_points, vis_points, centers= base_model(points, vis=True)
             final_image = []
