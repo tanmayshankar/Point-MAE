@@ -395,6 +395,8 @@ class Point_MAE(nn.Module):
 
         x_rec = self.MAE_decoder(x_full, pos_full, N)
 
+        print("Embedding in Point-MAE models.")
+        embed()
         B, M, C = x_rec.shape
         rebuild_points = self.increase_dim(x_rec.transpose(1, 2)).transpose(1, 2).reshape(B * M, -1, 3)  # B M 1024
 
