@@ -11,7 +11,7 @@ from utils.logger import *
 import random
 from knn_cuda import KNN
 from extensions.chamfer_dist import ChamferDistanceL1, ChamferDistanceL2
-
+from IPython import embed
 
 class Encoder(nn.Module):   ## Embedding module
     def __init__(self, encoder_channel):
