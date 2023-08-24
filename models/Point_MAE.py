@@ -379,13 +379,19 @@ class Point_MAE(nn.Module):
 
 
     def forward(self, pts, vis = False, **kwargs):
+
+        # Adding our own documentation of what this forward function does. 
+
+        # Breaking up input point cloud into constant sized point patches. 
+        # Collects fixed number of centers, and fixed number of nearest neighbors to each center. 
         neighborhood, center = self.group_divider(pts)
 
+        # Encodes point patches. 
         x_vis, mask = self.MAE_encoder(neighborhood, center)
         B,_,C = x_vis.shape # B VIS C
 
+        # Getting positional encodings. 
         pos_emd_vis = self.decoder_pos_embed(center[~mask]).reshape(B, -1, C)
-
         pos_emd_mask = self.decoder_pos_embed(center[mask]).reshape(B, -1, C)
 
         _,N,_ = pos_emd_mask.shape
