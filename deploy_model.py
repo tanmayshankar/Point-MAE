@@ -43,11 +43,12 @@ def return_model():
 	_, test_dataloader = builder.dataset_builder(args, config.dataset.test)
 
 	base_model = builder.model_builder(config.model).cuda()
-	print("Embed after model creation.")
-	embed()
+	return base_model
 
 def main():
-	return_model()
+	pointmae_model = return_model()
+	print("Embed after model creation.")
+	embed()
 
 if __name__ == '__main__':
 	main()
