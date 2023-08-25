@@ -377,8 +377,8 @@ class Point_MAE(nn.Module):
             raise NotImplementedError
             # self.loss_func = emd().cuda()
 
-
-    def forward(self, pts, vis = False, **kwargs):
+    
+    def encoder_forward(self, pts, vis = False, **kwargs):
 
         # Adding our own documentation of what this forward function does. 
 
@@ -403,6 +403,30 @@ class Point_MAE(nn.Module):
 
         print("Embedding in Point-MAE models.")
         embed()
+
+    def forward(self, pts, vis = False, **kwargs):
+
+        # Adding our own documentation of what this forward function does. 
+
+        # Breaking up input point cloud into constant sized point patches. 
+        # Collects fixed number of centers, and fixed number of nearest neighbors to each center. 
+        neighborhood, center = self.group_divider(pts)
+
+        # Encodes point patches. 
+        x_vis, mask = self.MAE_encoder(neighborhood, center)
+        B,_,C = x_vis.shape # B VIS C
+
+        # Getting positional encodings. 
+        pos_emd_vis = self.decoder_pos_embed(center[~mask]).reshape(B, -1, C)
+        pos_emd_mask = self.decoder_pos_embed(center[mask]).reshape(B, -1, C)
+
+        _,N,_ = pos_emd_mask.shape
+        mask_token = self.mask_token.expand(B, N, -1)
+        x_full = torch.cat([x_vis, mask_token], dim=1)
+        pos_full = torch.cat([pos_emd_vis, pos_emd_mask], dim=1)
+
+        x_rec = self.MAE_decoder(x_full, pos_full, N)
+
         B, M, C = x_rec.shape
         rebuild_points = self.increase_dim(x_rec.transpose(1, 2)).transpose(1, 2).reshape(B * M, -1, 3)  # B M 1024
 
