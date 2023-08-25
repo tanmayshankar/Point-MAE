@@ -47,7 +47,7 @@ def get_args():
     parser.add_argument(
         '--test', 
         action='store_true', 
-        default=False, 
+        default=True, 
         help = 'test mode for certain ckpt')
     parser.add_argument(
         '--finetune_model', 
