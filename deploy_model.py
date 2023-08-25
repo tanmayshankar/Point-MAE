@@ -35,11 +35,11 @@ def main():
 	logger.info(f'Distributed training: {args.distributed}')
 
 	# test_net(args, config)
-    	logger = get_logger(args.log_name)
-    	print_log('Tester start ... ', logger = logger)
-    	_, test_dataloader = builder.dataset_builder(args, config.dataset.test)
+	logger = get_logger(args.log_name)
+	print_log('Tester start ... ', logger = logger)
+	_, test_dataloader = builder.dataset_builder(args, config.dataset.test)
 
-    	base_model = builder.model_builder(config.model)
+	base_model = builder.model_builder(config.model)
 
 
 
