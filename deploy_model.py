@@ -1,5 +1,6 @@
-from tools import test_net
-from utils import parser, dist_utils, misc
+# from tools import test_net
+from utils import parser
+# from utils import dist_utils, misc
 from utils.logger import *
 from utils.config import *
 from tools import builder
