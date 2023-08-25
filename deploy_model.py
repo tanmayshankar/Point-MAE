@@ -12,7 +12,7 @@ def main():
     # CUDA
     args.use_gpu = torch.cuda.is_available()
     if args.use_gpu:
-        torch.backends.cudnn.benchmark = True
+		torch.backends.cudnn.benchmark = True
     # init distributed env first, since logger depends on the dist info.
 	args.distributed = False
     
