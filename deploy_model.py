@@ -40,7 +40,7 @@ def main():
 	print_log('Tester start ... ', logger = logger)
 	_, test_dataloader = builder.dataset_builder(args, config.dataset.test)
 
-	base_model = builder.model_builder(config.model)
+	base_model = builder.model_builder(config.model).cuda()
 	print("Embed after model creation.")
 	embed()
 
