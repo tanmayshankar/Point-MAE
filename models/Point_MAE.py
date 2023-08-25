@@ -386,11 +386,14 @@ class Point_MAE(nn.Module):
         # Collects fixed number of centers, and fixed number of nearest neighbors to each center. 
         neighborhood, center = self.group_divider(pts)
 
-        # Encodes point patches. 
+        # Get embeddings of visible point patches, and decide which point patches should be masked.
+        # In test mode, is this false?
+        
         x_vis, mask = self.MAE_encoder(neighborhood, center)
         B,_,C = x_vis.shape # B VIS C
 
         # Getting positional encodings. 
+        
         pos_emd_vis = self.decoder_pos_embed(center[~mask]).reshape(B, -1, C)
         pos_emd_mask = self.decoder_pos_embed(center[mask]).reshape(B, -1, C)
 
@@ -403,6 +406,8 @@ class Point_MAE(nn.Module):
 
         print("Embedding in Point-MAE models.")
         embed()
+        return x_vis
+
 
     def forward(self, pts, vis = False, **kwargs):
 
