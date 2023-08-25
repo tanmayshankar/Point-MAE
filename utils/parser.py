@@ -7,7 +7,8 @@ def get_args():
     parser.add_argument(
         '--config', 
         type = str, 
-        help = 'yaml config file')
+        help = 'yaml config file'
+        default = 'cfgs/pretrain.yml')
     parser.add_argument(
         '--launcher',
         choices=['none', 'pytorch'],
@@ -31,7 +32,7 @@ def get_args():
     parser.add_argument('--exp_name', type = str, default='default', help = 'experiment name')
     parser.add_argument('--loss', type=str, default='cd1', help='loss name')
     parser.add_argument('--start_ckpts', type = str, default=None, help = 'reload used ckpt path')
-    parser.add_argument('--ckpts', type = str, default=None, help = 'test used ckpt path')
+    parser.add_argument('--ckpts', type = str, default='ckpts/pretrain.pth', help = 'test used ckpt path')
     parser.add_argument('--val_freq', type = int, default=1, help = 'test freq')
     parser.add_argument(
         '--vote',
