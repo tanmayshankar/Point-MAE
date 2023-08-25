@@ -6,6 +6,7 @@ from tools import builder
 import time
 import os
 import torch
+from IPython import embed
 
 def main():
 	# args
@@ -40,7 +41,8 @@ def main():
 	_, test_dataloader = builder.dataset_builder(args, config.dataset.test)
 
 	base_model = builder.model_builder(config.model)
-
+	print("Embed after model creation.")
+	embed()
 
 
 if __name__ == '__main__':
