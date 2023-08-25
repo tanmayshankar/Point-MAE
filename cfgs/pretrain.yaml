@@ -13,11 +13,11 @@ scheduler: {
 }}
 
 dataset : {
-  train : { _base_: cfgs/dataset_configs/ShapeNet-55.yaml,
+  train : { _base_: /home/tshankar/Research/Code/PointMAE/cfgs/dataset_configs/ShapeNet-55.yaml,
             others: {subset: 'train', npoints: 1024}},
-  val : { _base_: cfgs/dataset_configs/ShapeNet-55.yaml,
+  val : { _base_: /home/tshankar/Research/Code/PointMAE/cfgs/dataset_configs/ShapeNet-55.yaml,
             others: {subset: 'test', npoints: 1024}},
-  test : { _base_: cfgs/dataset_configs/ShapeNet-55.yaml,
+  test : { _base_: /home/tshankar/Research/Code/PointMAE/cfgs/dataset_configs/ShapeNet-55.yaml,
             others: {subset: 'test', npoints: 1024}}}
 
 model : {
