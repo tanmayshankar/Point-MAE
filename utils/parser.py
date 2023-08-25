@@ -8,7 +8,7 @@ def get_args():
         '--config', 
         type = str, 
         help = 'yaml config file',
-        default = 'cfgs/pretrain.yml')
+        default = 'cfgs/pretrain.yaml')
     parser.add_argument(
         '--launcher',
         choices=['none', 'pytorch'],
