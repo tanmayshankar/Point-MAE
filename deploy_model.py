@@ -9,7 +9,8 @@ import os
 import torch
 from IPython import embed
 
-def main():
+
+def return_model():
 	# args
 	args = parser.get_args()
 	# CUDA
@@ -45,6 +46,8 @@ def main():
 	print("Embed after model creation.")
 	embed()
 
+def main():
+	return_model()
 
 if __name__ == '__main__':
 	main()
