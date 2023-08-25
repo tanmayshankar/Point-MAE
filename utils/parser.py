@@ -7,7 +7,7 @@ def get_args():
     parser.add_argument(
         '--config', 
         type = str, 
-        help = 'yaml config file'
+        help = 'yaml config file',
         default = 'cfgs/pretrain.yml')
     parser.add_argument(
         '--launcher',
