@@ -404,8 +404,6 @@ class Point_MAE(nn.Module):
 
         x_rec = self.MAE_decoder(x_full, pos_full, N)
 
-        print("Embedding in Point-MAE models.")
-        embed()
         return x_vis
 
 
