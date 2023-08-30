@@ -324,6 +324,92 @@ class MaskTransformer(nn.Module):
         return x_vis, bool_masked_pos
 
 
+
+@MODELS.register_module()
+class Point_MAE_Encoder(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+        print_log(f'[Point_MAE_Encoder] ', logger ='Point_MAE_Encoder')
+        self.config = config
+        self.trans_dim = config.transformer_config.trans_dim
+        self.MAE_encoder = MaskTransformer(config)
+        self.group_size = config.group_size
+        self.num_group = config.num_group
+        self.drop_path_rate = config.transformer_config.drop_path_rate
+        self.mask_token = nn.Parameter(torch.zeros(1, 1, self.trans_dim))
+        self.decoder_pos_embed = nn.Sequential(
+            nn.Linear(3, 128),
+            nn.GELU(),
+            nn.Linear(128, self.trans_dim)
+        )
+
+        self.decoder_depth = config.transformer_config.decoder_depth
+        self.decoder_num_heads = config.transformer_config.decoder_num_heads
+        dpr = [x.item() for x in torch.linspace(0, self.drop_path_rate, self.decoder_depth)]
+        self.MAE_decoder = TransformerDecoder(
+            embed_dim=self.trans_dim,
+            depth=self.decoder_depth,
+            drop_path_rate=dpr,
+            num_heads=self.decoder_num_heads,
+        )
+
+        print_log(f'[Point_MAE] divide point cloud into G{self.num_group} x S{self.group_size} points ...', logger ='Point_MAE')
+        self.group_divider = Group(num_group = self.num_group, group_size = self.group_size)
+
+        # prediction head
+        self.increase_dim = nn.Sequential(
+            # nn.Conv1d(self.trans_dim, 1024, 1),
+            # nn.BatchNorm1d(1024),
+            # nn.LeakyReLU(negative_slope=0.2),
+            nn.Conv1d(self.trans_dim, 3*self.group_size, 1)
+        )
+
+        trunc_normal_(self.mask_token, std=.02)
+        self.loss = config.loss
+        # loss
+        self.build_loss_func(self.loss)
+
+    def build_loss_func(self, loss_type):
+        if loss_type == "cdl1":
+            self.loss_func = ChamferDistanceL1().cuda()
+        elif loss_type =='cdl2':
+            self.loss_func = ChamferDistanceL2().cuda()
+        else:
+            raise NotImplementedError
+            # self.loss_func = emd().cuda()
+
+    
+    # def encoder_forward(self, pts, vis = False, **kwargs):
+    def forward(self, pts, vis = False, **kwargs):
+
+        # Adding our own documentation of what this forward function does. 
+
+        # Breaking up input point cloud into constant sized point patches. 
+        # Collects fixed number of centers, and fixed number of nearest neighbors to each center. 
+        neighborhood, center = self.group_divider(pts)
+
+        # Get embeddings of visible point patches, and decide which point patches should be masked.
+        # In test mode, is this false?
+        
+        x_vis, mask = self.MAE_encoder(neighborhood, center)
+        B,_,C = x_vis.shape # B VIS C
+
+        # Getting positional encodings. 
+        
+        pos_emd_vis = self.decoder_pos_embed(center[~mask]).reshape(B, -1, C)
+        pos_emd_mask = self.decoder_pos_embed(center[mask]).reshape(B, -1, C)
+
+        _,N,_ = pos_emd_mask.shape
+        mask_token = self.mask_token.expand(B, N, -1)
+        x_full = torch.cat([x_vis, mask_token], dim=1)
+        pos_full = torch.cat([pos_emd_vis, pos_emd_mask], dim=1)
+
+        x_rec = self.MAE_decoder(x_full, pos_full, N)
+
+        return x_vis
+
+
+
 @MODELS.register_module()
 class Point_MAE(nn.Module):
     def __init__(self, config):
